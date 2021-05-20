@@ -4,7 +4,7 @@ class Validator:
     # General Validations
     @staticmethod
     def check_action(action):
-        if not action in ['info', 'rotate', 'merge', 'split', 'imgToPdf', 'standardize']:
+        if not action in ['info', 'rotate', 'merge', 'split', 'imgToPdf', 'standardize', 'resize']:
             print('Action not correct')
             exit(1)
 
@@ -34,7 +34,7 @@ class Validator:
         types = [i.split('.')[-1].lower() for i in inputs]
         for t in types:
             if t not in expectations:
-                print(f'Only Files of types {expectation} are accepted')
+                print(f'Only Files of types {expectations} are accepted')
                 exit(1)
 
     @staticmethod
@@ -58,33 +58,63 @@ class Validator:
             print('Only one Input File allowed')
             exit(1)
 
+    @staticmethod
+    def allow_sizes(width, height):
+        if width == None:
+            print('You have to specify the width Argument here')
+            exit(1)
+        if height == None:
+            print('You have to specify the height Argument here')
+            exit(1)
+
+    @staticmethod
+    def forbid_sizes(width, height):
+        if width != None:
+            print('You cant specify a width Argument here')
+            exit(1)
+        if height != None:
+            print('You cant specify a height Argument here')
+            exit(1)
+
     # Action Specific Validations
     @staticmethod
-    def check_split_params(inputs, deg):
+    def check_split_params(inputs, deg, w, h):
         Validator.allow_one_file(inputs)
         Validator.check_filetype(inputs, 'pdf')
         Validator.forbid_degrees(deg)
+        Validator.forbid_sizes(w, h)
 
     @staticmethod
-    def check_merge_params(inputs, deg):
+    def check_merge_params(inputs, deg, w, h):
         Validator.check_filetype(inputs, 'pdf')
         Validator.forbid_degrees(deg)
+        Validator.forbid_sizes(w, h)
 
     @staticmethod
-    def check_imgToPdf_params(inputs, deg):
+    def check_resize_params(inputs, deg, w, h):
+        Validator.allow_one_file(inputs)
+        Validator.check_filetype(inputs, 'pdf')
+        Validator.forbid_degrees(deg)
+        Validator.allow_sizes(w, h)
+
+    @staticmethod
+    def check_imgToPdf_params(inputs, deg, w, h):
         Validator.allow_one_file(inputs)
         Validator.check_filetypes(inputs, ['png', 'jpg', 'jpeg'])
         Validator.forbid_degrees(deg)
+        Validator.forbid_sizes(w, h)
 
     @staticmethod
-    def check_standardize_params(inputs, deg):
+    def check_standardize_params(inputs, deg, w, h):
         Validator.allow_one_file(inputs)
         Validator.check_filetype(inputs, 'pdf')
         Validator.forbid_degrees(deg)
+        Validator.forbid_sizes(w, h)
 
     @staticmethod
-    def check_rotate_params(inputs, deg):
+    def check_rotate_params(inputs, deg, w, h):
         Validator.allow_one_file(inputs)
         Validator.check_filetype(inputs, 'pdf')
         Validator.allow_degrees(deg)
+        Validator.forbid_sizes(w, h)
 

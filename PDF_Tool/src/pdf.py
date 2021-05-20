@@ -43,8 +43,17 @@ class PDF:
             page.scaleTo(float(common_size[0]), float(common_size[1]))
             output.addPage(page)
 
-        with open(f'{ out }/{ self.file_name }_standardized.pdf', 'wb') as outputStream:
+        with open(f'{ out }/{ self.file_name }_resized.pdf', 'wb') as outputStream:
             output.write(outputStream)
+
+
+    def update_size(self, out, width, height):
+        pages = []
+        for i in range(self.pdf.numPages):
+            pages.append(self.pdf.getPage(i))
+
+        size = (width, height)
+        self.resize(pages, size, out)
 
 
     def rotate(self, out, deg):

@@ -7,6 +7,8 @@ parser.add_argument('action', type=str, metavar='action', help='Enter the Action
 parser.add_argument('-i', '--input', type=str, metavar='', default='', help='Enter your Input File(s) [ multiple Files like: file1.pdf,file2.pdf,file3.pdf ]')
 parser.add_argument('-o', '--output', type=str, metavar='', default='.', help='Enter your Output Directory')
 parser.add_argument('-d', '--degree', type=int, metavar='', default=None, help='Enter degrees you want to rotate the PDF')
+parser.add_argument('-he', '--height', type=int, metavar='', default=None, help='Enter Height to resize PDF')
+parser.add_argument('-wi', '--width', type=int, metavar='', default=None, help='Enter Width to resize PDF')
 args = parser.parse_args()
 
 
@@ -35,7 +37,10 @@ actions:    - split:        Splits all Pages of a PDF and outputs all those
                             Here you have to use the -d or --degree flag to add the
                             number of degrees your pages should rotate clockwise.
 
-            - imgToPdf      Converts a Image to a PDF.
+            - imgToPdf:     Converts a Image to a PDF.
+
+            - resize:       Resizes all Pages of a PDF to a specific size.
+                            Here you have to use -he and -wi for the height and width.
 
 
 -i          Here you specify your input File(s). If you need more than Input Files
@@ -64,26 +69,31 @@ def process():
         print_info()
 
     elif args.action == 'rotate':
-        Validator.check_rotate_params(inputs, args.degree)
+        Validator.check_rotate_params(inputs, args.degree, args.width, args.height)
         pdf = PDF(inputs[0])
         pdf.rotate(args.output, args.degree)
 
+    elif args.action == 'resize':
+        Validator.check_resize_params(inputs, args.degree, args.width, args.height)
+        pdf = PDF(inputs[0])
+        pdf.update_size(args.output, args.width, args.height)
+
     elif args.action == 'imgToPdf':
-        Validator.check_imgToPdf_params(inputs, args.degree)
+        Validator.check_imgToPdf_params(inputs, args.degree, args.width, args.height)
         picture = Picture(inputs[0])
         picture.convertToPdf(args.output)
 
     elif args.action == 'standardize':
-        Validator.check_standardize_params(inputs, args.degree)
+        Validator.check_standardize_params(inputs, args.degree, args.width, args.height)
         pdf = PDF(inputs[0])
         pdf.standardize(args.output)
 
     elif args.action == 'merge':
-        Validator.check_merge_params(inputs, args.degree)
+        Validator.check_merge_params(inputs, args.degree, args.width, args.height)
         PDF.merge(inputs, args.output)
 
     elif args.action == 'split':
-        Validator.check_split_params(inputs, args.degree)
+        Validator.check_split_params(inputs, args.degree, args.width, args.height)
         pdf = PDF(inputs[0])
         pdf.split(args.output)
         
