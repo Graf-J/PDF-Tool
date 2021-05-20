@@ -3,11 +3,12 @@ from PyPDF2 import PdfFileReader, PdfFileWriter
 class PDF:
     def __init__(self, path):
         self.pdf = PdfFileReader(open(path, 'rb'))
+        self.file_name = path.split('/')[-1].split('.')[0]
 
 
     def split(self, output):
         for i in range(self.pdf.numPages):
-            self.write(self.pdf.getPage(i), f'{ output }/page_{ i + 1 }')
+            self.write(self.pdf.getPage(i), f'{ output }/{ self.file_name }_{ i + 1 }')
             
 
     def write(self, pdf, name):
@@ -42,7 +43,7 @@ class PDF:
             page.scaleTo(float(common_size[0]), float(common_size[1]))
             output.addPage(page)
 
-        with open(f'{ out }/standardized.pdf', 'wb') as outputStream:
+        with open(f'{ out }/{ self.file_name }_standardized.pdf', 'wb') as outputStream:
             output.write(outputStream)
 
 
@@ -54,7 +55,7 @@ class PDF:
             page.rotateClockwise(deg)
             output.addPage(page)
 
-        with open(f'{ out }/rotate{ deg }.pdf', 'wb') as outputStream:
+        with open(f'{ out }/{ self.file_name }_rotate{ deg }.pdf', 'wb') as outputStream:
             output.write(outputStream)
     
     @staticmethod

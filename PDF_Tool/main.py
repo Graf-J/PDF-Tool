@@ -66,7 +66,7 @@ def process():
     elif args.action == 'rotate':
         Validator.check_rotate_params(inputs, args.degree)
         pdf = PDF(inputs[0])
-        pdf.rotate(inputs[0], args.output, args.degree)
+        pdf.rotate(args.output, args.degree)
 
     elif args.action == 'imgToPdf':
         Validator.check_imgToPdf_params(inputs, args.degree)
